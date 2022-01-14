@@ -5,21 +5,21 @@ textoBaseDePreguntas = ''''''
 renglones = []
 
 try:
-    urlBD = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSENkS_yI5lFmANBOJQkZT4Z8nXmKr6lfFQG5qYvlfnPMHBmtUM-C5JB6TFUNeN8UJ-jh2BXpDAcmy8/pub?output=tsv"
-    HTTP_response=urllib.request.urlopen(urlBD)
+    urlBDj = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSENkS_yI5lFmANBOJQkZT4Z8nXmKr6lfFQG5qYvlfnPMHBmtUM-C5JB6TFUNeN8UJ-jh2BXpDAcmy8/pub?output=tsv"
+    HTTP_response=urllib.request.urlopen(urlBDj)
     for line in HTTP_response:
         renglones.append(line.decode("utf-8").replace("\n","").replace("\r",""))
 except:
     print("No hay conexión a internet, no se pudo cargar la BD")
     exit()
 
-n_pregunta = 0
+num_pregunta = 0
 
 base_de_preguntas = []
 cantidadDePreguntas = len(renglones)
 
-preguntaEscogida = []
-opciones = []
+pregunta_R = []
+eleccion = []
 pregunta = ""
 respuesta = ""
 
@@ -29,54 +29,54 @@ for i in range(cantidadDePreguntas):
     base_de_preguntas.append(renglones[i].split("\t"))
 
 
-def borrarConsola():
+def borrarCon():
     os.system("cls" if os.name == "nt" else "clear")
 
 
 def escogerPregunta(n):
-    global opciones, respuesta, pregunta
+    global eleccion, respuesta, pregunta
 
-    preguntaEscogida = base_de_preguntas[n]
-    pregunta = preguntaEscogida[0]
-    respuesta = preguntaEscogida[1]
-    opciones = preguntaEscogida[1:]
+    pregunta_R = base_de_preguntas[n]
+    pregunta = pregunta_R[0]
+    respuesta = pregunta_R[1]
+    eleccion = pregunta_R[1:]
     for i in range(10):
-        random.shuffle(opciones)
-    print(opciones)
-    return preguntaEscogida
+        random.shuffle(eleccion)
+    print(eleccion)
+    return pregunta_R
 
 
 def mostrarPregunta():
-    borrarConsola()
+    borrarCon()
     print()
     print(pregunta)
-    print("A)", opciones[0])
-    print("B)", opciones[1])
-    print("C)", opciones[2])
-    print("D)", opciones[3])
+    print("A)", eleccion[0])
+    print("B)", eleccion[1])
+    print("C)", eleccion[2])
+    print("D)", eleccion[3])
     print()
 
 
-def capturarRespuesta():
+def tomarRespuesta():
     respuestaUsuario = ""
-    opcionesVálidas = ["a", "b", "c", "d"]
+    opcValidas = ["a", "b", "c", "d"]
     while True:
         respuestaUsuario = input("ingrese su respuesta > ").lower()
-        if not (respuestaUsuario in opcionesVálidas):
-            print("La respuesta no está entre las opciones válidas, vuelva a intentarlo")
+        if not (respuestaUsuario in opcValidas):
+            print("La respuesta no valida entre las opciones, vuelva a intentarlo")
             continue
         break
-    return opcionesVálidas.index(respuestaUsuario)
+    return opcValidas.index(respuestaUsuario)
 
 
 def jugar():
-    escogerPregunta(n_pregunta)
+    escogerPregunta(num_pregunta)
     mostrarPregunta()
-    if(opciones[capturarRespuesta()]==respuesta ):
-        print("Su respuesta es correcta")
+    if(eleccion[tomarRespuesta()]==respuesta ):
+        print("Respuesta correcta")
         input("ENTER PARA CONTINUAR")
     else:
-        print("Su respuesta NO es correcta, la correcta es: "+ respuesta)
+        print("Respuesta Incorrecta, la correcta es: "+ respuesta)
         input("ENTER PARA CONTINUAR")
 
 while True:
@@ -84,9 +84,9 @@ while True:
         jugar()
     except:
         pass
-    n_pregunta += 1
-    if(n_pregunta==cantidadDePreguntas):
-        borrarConsola()
-        print("El juego ha finalizado y su puntaje es", puntaje)
+    num_pregunta += 1
+    if(num_pregunta==cantidadDePreguntas):
+        borrarCon()
+        print("El juego finalizo")
         input("ENTER PARA CONTINUAR")
         break
